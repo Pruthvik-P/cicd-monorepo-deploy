@@ -6,16 +6,20 @@ on:
 jobs:
   redeploy_everything:
     runs-on: ubuntu-latest
-    - name: Deploying everything to staging cluster
-      
-      steps:
-      - name: SSH into server
+
+    steps:
+      - name: Setup SSH Key
         run: |
-          echo ${{ secrets.SSH_STG_PRIVATE_KEY }} &> ~/ssh_key
-          ssh -i ~/ssh_key root@13.233.126.210
-          cd cicd-monorepo-deploy && git pull
-          pnpm install
-          pnpm run build
-          pm2 resstart fe-server
-          pm2 restart http-server
-          pm2 restart ws-server
+          echo "${{ secrets.SSH_STG_PRIVATE_KEY }}" > ~/ssh_key
+
+      - name: Deploying everything to staging cluster
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ~/ssh_key root@13.233.126.210 << 'EOF'
+            cd cicd-monorepo-deploy
+            git pull
+            pnpm install
+            pnpm run build
+            pm2 restart fe-server
+            pm2 restart http-server
+            pm2 restart ws-server
+          EOF
