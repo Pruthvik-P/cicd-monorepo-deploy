@@ -11,6 +11,7 @@ jobs:
       - name: Setup SSH Key
         run: |
           echo "${{ secrets.SSH_STG_PRIVATE_KEY }}" > ~/ssh_key
+          chmod 600 ~/ssh_key
 
       - name: Deploying everything to staging cluster
         run: |
