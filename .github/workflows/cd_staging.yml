@@ -15,7 +15,7 @@ jobs:
 
       - name: Deploying everything to staging cluster
         run: |
-          ssh -o StrictHostKeyChecking=no -i ~/ssh_key root@13.233.126.210 << 'EOF'
+          ssh -o StrictHostKeyChecking=no -i ~/ssh_key ubuntu@13.233.126.210 << 'EOF'
             cd cicd-monorepo-deploy
             git pull
             pnpm install
